@@ -1,0 +1,82 @@
+
+// calls the function pageElements upon loading the page
+document.body.onload = pageElements;
+
+// function calls other functions to provide the page elements
+function pageElements() {
+    addElement("button", "print sumting", "print-button");
+    addElement("button", "clean everytin", "clear-button");
+    addDiv("all-cat-facts");
+
+    const printButton = document.getElementById("print-button");
+    const clearButton = document.getElementById("clear-button");
+    
+    // adds catfacts to div
+    function addElement3(myElement, myText) {
+        // create a new element
+        const newElement = document.createElement(myElement);
+    
+        // and give it some content
+        const newContent = document.createTextNode(myText);
+      
+        // add the text node to the element
+        newElement.appendChild(newContent);
+      
+        // add element to body
+        document.getElementById("all-cat-facts").appendChild(newElement);
+    }
+    // gets data and calls above function
+    function getData() {
+        fetch("https://meowfacts.herokuapp.com/")
+        .then(response => response.json())
+        .then(function (json) {
+            addElement3("p", Object.values(json));
+        });
+        
+    }
+
+    // clears all catfacts by removing all childs of the parent div
+    // inspo from https://www.w3schools.com/jsref/met_node_removechild.asp
+    function clearCatFacts() {
+        const catFactsDiv = document.getElementById("all-cat-facts");
+
+        while (catFactsDiv.hasChildNodes()) {
+            catFactsDiv.removeChild(catFactsDiv.firstChild);
+        }        
+    }
+
+    printButton.addEventListener("click", getData);
+    clearButton.addEventListener("click", clearCatFacts);
+}
+
+// adds div, dunno if i couldve written this inside the above function, feels cleaner this way
+function addDiv(myId) {
+    // create a div
+    const newElement = document.createElement("div");
+
+    //give it ID
+    newElement.setAttribute("id", myId);
+
+    // add to body
+    document.body.appendChild(newElement);
+}
+
+// function takes two arguments, myElement which determines what element to create
+// and myText which determines the text content of that element
+// based code on https://developer.mozilla.org/en-US/docs/Web/API/Document/createElement#web_component_example
+function addElement(myElement, myText, myId) {
+    // create a new element
+    const newElement = document.createElement(myElement);
+
+    //give it ID
+    newElement.setAttribute("id", myId);
+  
+    // and give it some content
+    const newContent = document.createTextNode(myText);
+  
+    // add the text node to the element
+    newElement.appendChild(newContent);
+  
+    // add element to body
+    document.body.appendChild(newElement);
+}
